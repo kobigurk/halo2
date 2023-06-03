@@ -339,7 +339,7 @@ pub struct Hash<
     const T: usize,
     const RATE: usize,
 > {
-    sponge: Sponge<F, S, Absorbing<F, RATE>, T, RATE>,
+    pub sponge: Sponge<F, S, Absorbing<F, RATE>, T, RATE>,
     _domain: PhantomData<D>,
 }
 
