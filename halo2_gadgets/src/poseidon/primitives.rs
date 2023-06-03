@@ -190,13 +190,7 @@ impl<F: fmt::Debug, const RATE: usize> Absorbing<F, RATE> {
 
 #[derive(Clone, Debug)]
 /// A Poseidon sponge.
-pub struct Sponge<
-    F: Field,
-    S: Spec<F, T, RATE>,
-    M: SpongeMode,
-    const T: usize,
-    const RATE: usize,
-> {
+pub struct Sponge<F: Field, S: Spec<F, T, RATE>, M: SpongeMode, const T: usize, const RATE: usize> {
     mode: M,
     state: State<F, T>,
     mds_matrix: Mds<F, T>,
@@ -225,7 +219,7 @@ impl<F: Field, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
     }
 
     /// Absorbs an element into the sponge.
-    pub(crate) fn absorb(&mut self, value: F) {
+    pub fn absorb(&mut self, value: F) {
         for entry in self.mode.0.iter_mut() {
             if entry.is_none() {
                 *entry = Some(value);
@@ -244,7 +238,7 @@ impl<F: Field, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
     }
 
     /// Transitions the sponge into its squeezing state.
-    pub(crate) fn finish_absorbing(mut self) -> Sponge<F, S, Squeezing<F, RATE>, T, RATE> {
+    pub fn finish_absorbing(mut self) -> Sponge<F, S, Squeezing<F, RATE>, T, RATE> {
         let mode = poseidon_sponge::<F, S, T, RATE>(
             &mut self.state,
             Some(&self.mode),
@@ -266,7 +260,7 @@ impl<F: Field, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
     Sponge<F, S, Squeezing<F, RATE>, T, RATE>
 {
     /// Squeezes an element from the sponge.
-    pub(crate) fn squeeze(&mut self) -> F {
+    pub fn squeeze(&mut self) -> F {
         loop {
             for entry in self.mode.0.iter_mut() {
                 if let Some(e) = entry.take() {
