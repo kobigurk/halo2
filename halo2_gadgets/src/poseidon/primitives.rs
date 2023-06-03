@@ -188,9 +188,9 @@ impl<F: fmt::Debug, const RATE: usize> Absorbing<F, RATE> {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 /// A Poseidon sponge.
-pub(crate) struct Sponge<
+pub struct Sponge<
     F: Field,
     S: Spec<F, T, RATE>,
     M: SpongeMode,
@@ -339,6 +339,7 @@ pub struct Hash<
     const T: usize,
     const RATE: usize,
 > {
+    /// A sponge for the permutation.
     pub sponge: Sponge<F, S, Absorbing<F, RATE>, T, RATE>,
     _domain: PhantomData<D>,
 }
